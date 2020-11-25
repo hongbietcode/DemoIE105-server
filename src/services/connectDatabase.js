@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const hashPassword = require("../Cryptos/SHA256Hash");
 
 class Database {
 	constructor() {
@@ -9,7 +10,10 @@ class Database {
 		mongoose.set("useFindAndModify", false);
 		mongoose.set("useCreateIndex", true);
 		mongoose
-			.connect(process.env.CONNECT_STRING, {useNewUrlParser: true, useUnifiedTopology: true})
+			.connect(process.env.CONNECT_STRING_PUBLIC, {
+				useNewUrlParser: true,
+				useUnifiedTopology: true,
+			})
 			.then(() => {
 				console.log("✅  Database connection successfully");
 			})
