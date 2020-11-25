@@ -1,9 +1,10 @@
 const SocketId_UserId = require("../Storage").SocketId_UserId;
 const UserId_SocketId = require("../Storage").UserId_SocketId;
 const UserId = require("../Storage").UserId;
-const CryptoJS = require("crypto-js");
-var KeyChart = require("../Storage").KeyChart;
-const encrypt = require("../Cryptos/AESCrypto").encrypt;
+const AESKey = require("../Storage").AESKey;
+
+const AES = require("../Cryptos/AESCrypto");
+
 class SocketIO {
 	constructor(httpServer) {
 		this._start(httpServer);
@@ -11,12 +12,6 @@ class SocketIO {
 
 	_start(httpServer) {
 		console.log("🌊 🌊 🌊  Socket IO starting !!!");
-
-		// NOTE: Create key for chart room
-		console.log("Server create key for room ...");
-		KeyChart = CryptoJS.lib.WordArray.random(128 / 8).toString();
-		console.log("Server create key successfully !!!");
-
 		//allow access origin socket
 		const io = require("socket.io")(httpServer, {
 			cors: {
@@ -41,8 +36,6 @@ class SocketIO {
 				}
 			});
 
-			socket.emit("AES_KEY", "abc");
-
 			socket.on("CLIENT", (data) => {
 				console.log("🎉  message: ", data);
 
@@ -50,8 +43,19 @@ class SocketIO {
 				if (data.aes === false) {
 					socket.broadcast.emit("SERVER", data);
 				} else {
+					data = {
+						...data,
+						payload: AES.decryptMessage(data.payload, data.userId),
+					};
+
+					console.log("💱  encrypt:", data);
 					UserId.forEach((id) => {
-						if (data.userId !== id) io.to(UserId_SocketId[id]).emit("SERVER", data);
+						const newData = {
+							...data,
+							payload: AES.encryptMessage(data.payload, id),
+						};
+
+						if (data.userId !== id) io.to(UserId_SocketId[id]).emit("SERVER", newData);
 					});
 				}
 			});
