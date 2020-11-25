@@ -21,6 +21,9 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(cors());
 app.use("/api", router);
 app.use(express.static(__dirname));
+app.get("/", (req, res) => {
+	res.status(200).send("Hello");
+});
 
 console.clear();
 httpServer.listen(portHttp, () => {

@@ -5,9 +5,6 @@ const auth = require("./controllers/authController");
 
 const route = express.Router();
 
-route.get("/", (req, res) => {
-	res.send("hi");
-});
 route.post("/user", user.createUser);
 // route.get("/user", user.getUser);
 route.post("/login", auth.login);
