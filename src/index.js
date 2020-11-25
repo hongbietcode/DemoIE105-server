@@ -4,7 +4,6 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 
 const app = express();
-// const portHttps = 443;
 const portHttp = process.env.PORT || 80;
 
 const router = require("./router");
