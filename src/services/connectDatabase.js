@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const hashPassword = require("../Cryptos/SHA256Hash");
 
 class Database {
 	constructor() {
