@@ -5,13 +5,16 @@ class Database {
 		this._connect();
 	}
 	_connect() {
+		mongoose.set("useNewUrlParser", true);
+		mongoose.set("useFindAndModify", false);
+		mongoose.set("useCreateIndex", true);
 		mongoose
 			.connect(process.env.CONNECT_STRING, {useNewUrlParser: true, useUnifiedTopology: true})
 			.then(() => {
-				console.log("Database connection successfully");
+				console.log("✅  Database connection successfully");
 			})
 			.catch(() => {
-				console.log("Database connection failed");
+				console.log("❌  Database connection failed");
 			});
 	}
 }

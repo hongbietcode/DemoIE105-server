@@ -37,7 +37,7 @@ const login = (req, res) => {
 						const clientKey = req.body.clientKey;
 						const secretKey = user.secretKey.toString();
 
-						const AESKey = AES.generateSecretKey(secretKey, clientKey, user._id);
+						AES.generateSecretKey(secretKey, clientKey, user._id);
 
 						const data = {
 							message: "login successful",

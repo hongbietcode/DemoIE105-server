@@ -23,8 +23,9 @@ app.use(cors());
 app.use("/api", router);
 app.use(express.static(__dirname));
 
-new SocketIO(httpServer);
-
+console.clear();
 httpServer.listen(portHttp, () => {
-	console.log(`listen on http://localhost:${portHttp}`);
+	console.log(`👂  Listen on http://localhost:${portHttp}`);
 });
+
+new SocketIO(httpServer);
