@@ -24,31 +24,47 @@ class SocketIO {
 			console.log("✅  New client connection !");
 
 			socket.on("USER_ID", (data) => {
-				console.log(`✅  UserID: ${data} 🔛  SocketID: ${socket.id}`);
-				UserId.add(data);
+				console.log(`✅  UserID: ${data.userId} 🔛  SocketID: ${socket.id}`);
+				UserId.add(data.userId);
 				// NOTE:
 				if (
 					SocketId_UserId[socket.id] === undefined &&
-					UserId_SocketId[data] === undefined
+					UserId_SocketId[data.userId] === undefined
 				) {
-					UserId_SocketId[data] = socket.id;
-					SocketId_UserId[socket.id] = data;
+					UserId_SocketId[data.userId] = socket.id;
+					SocketId_UserId[socket.id] = data.userId;
 				}
+				socket.broadcast.emit("ACTIVE_USER", {
+					userId: data.userId,
+					state: "active",
+				});
 			});
 
 			socket.on("CLIENT", (data) => {
+				console.log("-------------------MESSAGE-----------------");
 				console.log("🎉  message: ", data);
 
-				// NOTE: su dung truyen du lieu aes hoac khong
+				io.sockets.emit("ACTIVE_USER", {
+					userId: data.userId,
+					state: "active",
+				});
+
+				// truyen tin nhan khong su dung aes
 				if (data.aes === false) {
 					socket.broadcast.emit("SERVER", data);
-				} else {
+				}
+				//truyen tin nhan su dung aess
+				else {
+					//decrypt message data
 					data = {
 						...data,
 						payload: AES.decryptMessage(data.payload, data.userId),
 					};
 
-					console.log("💱  encrypt:", data);
+					console.log("💱  decrypt:", data);
+					console.log("🔑  AESKey :", AESKey);
+
+					//loop va ma hoa du lieu cho tung user
 					UserId.forEach((id) => {
 						const newData = {
 							...data,
@@ -58,18 +74,26 @@ class SocketIO {
 						if (data.userId !== id) io.to(UserId_SocketId[id]).emit("SERVER", newData);
 					});
 				}
+				console.log("------------------END-MESSAGE--------------");
 			});
-
 			socket.on("WILL_DISCONNECT", (data) => {
 				UserId.delete(data);
+
+				socket.broadcast.emit("UN_ACTIVE_USER", {
+					userId: data,
+					state: "disconnect",
+				});
 				console.log(`❌  User: ${data} logout !!!`);
 			});
 
 			socket.on("disconnect", () => {
 				const userId = SocketId_UserId[socket.id];
+
+				if (AESKey[userId]) AESKey[userId] = undefined;
 				UserId_SocketId[userId] = undefined;
 				SocketId_UserId[socket.id] = undefined;
-				console.log("👉 ", `UserId: ${userId} disconnect !!!`);
+
+				console.log("❌ ", `UserId: ${userId} disconnect !!!`);
 			});
 		});
 	}

@@ -5,7 +5,9 @@ const createUser = (req, res) => {
 	if (
 		req.body.username == undefined ||
 		req.body.password == undefined ||
-		req.body.name == undefined
+		req.body.name == undefined ||
+		req.body.secretKey == undefined ||
+		req.body.avatar == undefined
 	)
 		return res.status(500).json({
 			success: false,
@@ -21,6 +23,7 @@ const createUser = (req, res) => {
 		password: passwordDigit,
 		salt: salt,
 		secretKey: req.body.secretKey,
+		avatar: req.body.avatar,
 	});
 
 	return user
@@ -45,4 +48,30 @@ const createUser = (req, res) => {
 // 	User.findById(req.cookies.abc).then((user) => res.send(user));
 // };
 
-module.exports = {createUser};
+const getAllUser = (req, res) => {
+	User.find({}).then((users) => {
+		const result = [];
+		users.map((user) =>
+			result.push({
+				userId: user._id,
+				name: user.name,
+				avatar: user.avatar,
+				online: req.query.id == user._id ? true : false,
+			})
+		);
+		res.send(result);
+	});
+};
+
+const removeUser = (req, res) => {
+	if (req.body.id === undefined)
+		return res.status(500).json({
+			success: false,
+			message: "require",
+		});
+
+	User.findByIdAndDelete({_id: req.body.id}).then((doc) => {
+		res.send(doc);
+	});
+};
+module.exports = {createUser, getAllUser, removeUser};

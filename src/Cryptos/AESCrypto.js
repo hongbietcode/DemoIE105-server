@@ -13,25 +13,25 @@ const generateSecretKey = (secretKey, clientKey, userId) => {
 const encrypt = (jsonData, userId) => {
 	const key = KeyStore[userId];
 	if (key) return CryptoJS.AES.encrypt(JSON.stringify(jsonData), key).toString();
-	return ":)";
+	return "😀";
 };
 
 const decrypt = (encrypt, userId) => {
 	const key = KeyStore[userId];
 	if (key) return JSON.parse(CryptoJS.enc.Utf8.stringify(CryptoJS.AES.decrypt(encrypt, key)));
-	return ":)";
+	return encrypt;
 };
 
 const encryptMessage = (message, userId) => {
 	const key = KeyStore[userId];
 	if (key) return CryptoJS.AES.encrypt(message, key).toString();
-	return ":)";
+	return "😀";
 };
 
 const decryptMessage = (encrypt, userId) => {
 	const key = KeyStore[userId];
 	if (key) return CryptoJS.enc.Utf8.stringify(CryptoJS.AES.decrypt(encrypt, key));
-	return ":)";
+	return encrypt;
 };
 
 module.exports = {generateSecretKey, encrypt, decrypt, encryptMessage, decryptMessage};
