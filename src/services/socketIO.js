@@ -89,7 +89,7 @@ class SocketIO {
 			socket.on("disconnect", () => {
 				const userId = SocketId_UserId[socket.id];
 
-				if (AESKey[userId]) AESKey[userId] = undefined;
+				// if (AESKey[userId]) AESKey[userId] = "none";
 				UserId_SocketId[userId] = undefined;
 				SocketId_UserId[socket.id] = undefined;
 
