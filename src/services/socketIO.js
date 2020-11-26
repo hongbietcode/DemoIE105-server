@@ -2,8 +2,9 @@ const SocketId_UserId = require("../Storage").SocketId_UserId;
 const UserId_SocketId = require("../Storage").UserId_SocketId;
 const UserId = require("../Storage").UserId;
 const AESKey = require("../Storage").AESKey;
-
 const AES = require("../Cryptos/AESCrypto");
+
+const Message = require("../models/message");
 
 class SocketIO {
 	constructor(httpServer) {
@@ -24,7 +25,7 @@ class SocketIO {
 			console.log("✅  New client connection !");
 
 			socket.on("USER_ID", (data) => {
-				console.log(`✅  UserID: ${data.userId} 🔛  SocketID: ${socket.id}`);
+				console.log(`🔊   UserID: ${data.userId} 🔛  SocketID: ${socket.id}`);
 				UserId.add(data.userId);
 				// NOTE:
 				if (
@@ -38,11 +39,16 @@ class SocketIO {
 					userId: data.userId,
 					state: "active",
 				});
+
+				// console.log("AESKey :", AESKey);
+				// console.log("UserID :", UserId);
+				// console.log("UserId_SocketId :", UserId_SocketId);
+				// console.log("SocketId_UserId :", SocketId_UserId);
 			});
 
 			socket.on("CLIENT", (data) => {
 				console.log("-------------------MESSAGE-----------------");
-				console.log("🎉  message: ", data);
+				console.log("🎉  Message: ", data);
 
 				io.sockets.emit("ACTIVE_USER", {
 					userId: data.userId,
@@ -61,8 +67,8 @@ class SocketIO {
 						payload: AES.decryptMessage(data.payload, data.userId),
 					};
 
-					console.log("💱  decrypt:", data);
-					console.log("🔑  AESKey :", AESKey);
+					console.log("💱  Decrypt:", data);
+					console.log("🔑  [UserId, AESKey] :", AESKey);
 
 					//loop va ma hoa du lieu cho tung user
 					UserId.forEach((id) => {
@@ -75,25 +81,37 @@ class SocketIO {
 					});
 				}
 				console.log("------------------END-MESSAGE--------------");
-			});
-			socket.on("WILL_DISCONNECT", (data) => {
-				UserId.delete(data);
 
-				socket.broadcast.emit("UN_ACTIVE_USER", {
-					userId: data,
-					state: "disconnect",
-				});
-				console.log(`❌  User: ${data} logout !!!`);
+				//storage messages database
+				new Message({
+					user: data.user,
+					userId: data.userId,
+					payload: data.payload,
+				}).save();
+			});
+
+			socket.on("LOGOUT", (data) => {
+				UserId.delete(data);
+				console.log("-------------USER-LOGOUT------------------");
+				if (AESKey[data]) AESKey[data] = undefined;
+				console.log(`🔊   User: ${data} logout !!!`);
 			});
 
 			socket.on("disconnect", () => {
 				const userId = SocketId_UserId[socket.id];
+				socket.broadcast.emit("UN_ACTIVE_USER", {
+					userId: userId,
+					state: "disconnect",
+				});
 
-				// if (AESKey[userId]) AESKey[userId] = "none";
 				UserId_SocketId[userId] = undefined;
 				SocketId_UserId[socket.id] = undefined;
 
-				console.log("❌ ", `UserId: ${userId} disconnect !!!`);
+				console.log("🔊  ", `UserId: ${userId} ❌  SocketID: ${socket.id} !!!`);
+
+				// console.log("UserID :", UserId);
+				// console.log("UserId_SocketId :", UserId_SocketId);
+				// console.log("SocketId_UserId :", SocketId_UserId);
 			});
 		});
 	}

@@ -25,7 +25,6 @@ app.get("/", (req, res) => {
 	res.status(200).send("hi!");
 });
 
-console.clear();
 httpServer.listen(portHttp, () => {
 	console.log(`👂  Listen on http://localhost:${portHttp}`);
 });
