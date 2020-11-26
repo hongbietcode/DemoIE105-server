@@ -22,7 +22,7 @@ app.use(cors());
 app.use("/api", router);
 app.use(express.static(__dirname));
 app.get("/", (req, res) => {
-	res.status(200).send("Hello");
+	res.status(200).send("hi!");
 });
 
 console.clear();
