@@ -1,6 +1,9 @@
 ### SERVER demo nhập môn đảm bảo an ninh thông tin
 
 ##### Repositories Client : https://github.com/HrqstnElq/DemoIE105-Client
+##### Link website : http://demo-ie105.surge.sh hoặc https://focused-khorana-dac803.netlify.app/ nên sử dụng link http để có thể không sử dụng giao thức mã hóa TLS/SSL của websever
+
+> username : tri, trung, duy; password : 1, secret key : 1
 
 Cấu trúc thư mục 
 
