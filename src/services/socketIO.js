@@ -15,7 +15,7 @@ class SocketIO {
 		//allow access origin socket
 		const io = require("socket.io")(httpServer, {
 			cors: {
-				origin: "http://demo-ie105.surge.sh",
+				origin: "*",
 				methods: ["GET", "POST"],
 			},
 		});
