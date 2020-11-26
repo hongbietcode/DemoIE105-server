@@ -5,8 +5,6 @@
 
 > username : tri, trung, duy; password : 1, secret key : 1
 
-Cấu trúc thư mục 
-
 #### 1.	Các loại mã hóa sử dụng
 
 - RSA  : dùng để client gửi thông tin đăng nhập về cho server ở chế độ **safe mode**
