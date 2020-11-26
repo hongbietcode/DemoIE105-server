@@ -2,6 +2,8 @@
 
 ##### Repositories Client : https://github.com/HrqstnElq/DemoIE105-Client
 
+Cấu trúc thư mục 
+
 #### 1.	Các loại mã hóa sử dụng
 
 - RSA  : dùng để client gửi thông tin đăng nhập về cho server ở chế độ **safe mode**
