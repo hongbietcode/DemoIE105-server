@@ -35,9 +35,8 @@ const login = (req, res) => {
 					// TODO safe mode
 					if (req.body.clientKey) {
 						const clientKey = req.body.clientKey;
-						const secretKey = user.secretKey.toString();
 
-						AES.generateSecretKey(secretKey, clientKey, user._id);
+						AES.generateSecretKey(clientKey, user._id);
 
 						const data = {
 							message: "login successful",

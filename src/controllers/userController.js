@@ -6,7 +6,6 @@ const createUser = (req, res) => {
 		req.body.username == undefined ||
 		req.body.password == undefined ||
 		req.body.name == undefined ||
-		req.body.secretKey == undefined ||
 		req.body.avatar == undefined
 	)
 		return res.status(500).json({
@@ -22,7 +21,6 @@ const createUser = (req, res) => {
 		username: req.body.username,
 		password: passwordDigit,
 		salt: salt,
-		secretKey: req.body.secretKey,
 		avatar: req.body.avatar,
 	});
 
