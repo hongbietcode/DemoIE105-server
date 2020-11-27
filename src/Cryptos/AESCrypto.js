@@ -4,7 +4,7 @@ const KeyStore = require("../Storage").AESKey;
 
 //generate key AES
 const generateSecretKey = (clientKey, userId) => {
-	const secretKey = DiffieHellman.generateSecretKey(clientKey);
+	const secretKey = DiffieHellman.Server.generateSecretKey(clientKey);
 	if (userId) KeyStore[userId] = secretKey;
 	return secretKey;
 };

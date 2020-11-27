@@ -2,18 +2,34 @@ const DF = require("diffie-hellman");
 
 class DiffieHellman {
 	constructor(group) {
-		const server = DF.getDiffieHellman(group);
-		server.generateKeys();
+		this.server = DF.getDiffieHellman(group);
+		this.server.generateKeys();
+	}
+
+	getPrime() {
+		const prime = this.server.getPrime().toString("base64");
+		return prime;
+	}
+
+	getGenerator() {
+		const generator = this.server.getGenerator().toString("base64");
+		return generator;
 	}
 
 	getPublicKey() {
-		return server.getPublicKey().toString("base64");
+		const publicKey = this.server.getPublicKey().toString("base64");
+		return publicKey;
 	}
 
-	generateSecretKey(base64PublicKey) {
-		const buffer = Buffer.from(base64PublicKey, "base64");
-		return server.computeSecret(buffer);
+	getPrivateKey() {
+		const privateKey = this.server.getPrivateKey().toString("base64");
+		return privateKey;
+	}
+
+	generateSecretKey(publicKey) {
+		const buffer = Buffer.from(publicKey, "base64");
+		return this.server.computeSecret(buffer).toString("base64");
 	}
 }
 
-module.exports = new DiffieHellman("modp1");
+module.exports = {Server: new DiffieHellman("modp1")};

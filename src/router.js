@@ -6,6 +6,8 @@ const auth = require("./controllers/authController");
 
 const Message = require("./models/message");
 const AES = require("./Cryptos/AESCrypto");
+const RSA = require("./Cryptos/RSACrypto");
+const DF = require("./Cryptos/DiffieHellman");
 
 route.post("/user", user.createUser);
 route.get("/users", user.getAllUser);
@@ -34,9 +36,23 @@ route.get("/secret", auth.auth, (req, res) => {
 route.get("/key", (req, res) => {
 	console.log("🧑   The new user connect with safe mode");
 	console.log("💌💌💌   Sending RSA public key . . .");
-	const public = require("./Cryptos/RSACrypto").Key.publicKey;
+	console.log("💌💌💌   Sending DF server public key . . .");
+
+	const rsaPublicKey = RSA.Key.publicKey;
+	const dfServerPublicKey = DF.Server.getPublicKey();
+
+	const DF_Server = {
+		prime: DF.Server.getPrime(),
+		generator: DF.Server.getGenerator(),
+		privateKey: DF.Server.getPrivateKey(),
+		publicKey: DF.Server.getPublicKey(),
+	};
+
+	console.log(" DF_Server[Base64]", DF_Server);
+
 	res.json({
-		key: public,
+		rsaPublicKey: rsaPublicKey,
+		dfServerPublicKey: dfServerPublicKey,
 	});
 });
 
