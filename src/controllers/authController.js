@@ -35,9 +35,8 @@ const login = (req, res) => {
 					// TODO safe mode
 					if (req.body.clientKey) {
 						const clientKey = req.body.clientKey;
-						const secretKey = user.secretKey.toString();
 
-						AES.generateSecretKey(secretKey, clientKey, user._id);
+						AES.generateSecretKey(clientKey, user._id);
 
 						const data = {
 							message: "login successful",
@@ -85,19 +84,19 @@ const login = (req, res) => {
 const auth = (req, res, next) => {
 	try {
 		const token = req.header("x-auth-token");
+		console.log("token : ", token);
 		if (!token)
 			return res.status(401).json({
 				message: "token is missing",
 			});
 
 		const verified = jwt.verify(token, process.env.SECRET_KEY);
-
 		if (!verified)
 			return res.status(401).json({
 				message: "Unauthorized",
 			});
 
-		req.user = verified.id;
+		req.userId = verified.id;
 		next();
 	} catch (err) {
 		res.status(500).json({

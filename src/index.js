@@ -22,10 +22,9 @@ app.use(cors());
 app.use("/api", router);
 app.use(express.static(__dirname));
 app.get("/", (req, res) => {
-	res.status(200).send("hi!");
+	res.status(200).send("<h3 align='center'>Đừng hack web em, pleaseeeee !!!</h3>");
 });
 
-console.clear();
 httpServer.listen(portHttp, () => {
 	console.log(`👂  Listen on http://localhost:${portHttp}`);
 });

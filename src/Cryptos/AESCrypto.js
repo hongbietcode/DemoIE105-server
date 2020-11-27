@@ -1,13 +1,12 @@
 const CryptoJS = require("crypto-js");
+const DiffieHellman = require("./DiffieHellman");
 const KeyStore = require("../Storage").AESKey;
 
 //generate key AES
-const generateSecretKey = (secretKey, clientKey, userId) => {
-	const AESKey128bits = CryptoJS.PBKDF2(secretKey, clientKey, {
-		keySize: 128 / 32,
-	}).toString();
-	if (userId) KeyStore[userId] = AESKey128bits;
-	return AESKey128bits;
+const generateSecretKey = (clientKey, userId) => {
+	const secretKey = DiffieHellman.Server.generateSecretKey(clientKey);
+	if (userId) KeyStore[userId] = secretKey;
+	return secretKey;
 };
 
 const encrypt = (jsonData, userId) => {
