@@ -57,24 +57,24 @@
 
    - Client sẽ dùng khóa RSA gửi 1 + 2 về cho server .
 
+   -  Cùng lúc đó Client sẽ gửi những thông tin sau lên server : **Username + password + Client public key Diffie-Hellman ** và được giải mã bằng khóa private rsa của server 
+
+   -  Server khi nhận được sẽ dùng khóa private rsa để giải mã và lấy thông tin đăng nhập so khớp mật khẩu như chế độ **Unsafe mode**  nếu đúng thì sẽ sinh khóa AES 
+
    -  Bằng việc sử dụng **Diffie-Hellman** có số nguyên tố và căn nguyên thuộc **modp1**. Từ server và client có thể kết hợp thêm public key của nhau để sinh ra cùng một khóa. Khóa này sẽ được sử dụng là khóa mã hóa **AES**
 
      ```js
      	generateSecretKey(serverPublicKey) {
      		//chuyển base thành buffer
-     		const serverKey = Buffer.from(serverPublicKey, "base64");
-     		const secretKey = this.client.computeSecret(serverKey).toString("base64");
+     		const serverKey=Buffer.from(serverPublicKey, "base64");
+     		const secretKey=this.client/server.computeSecret(serverKeyServer/Client).toString("base64");
      		return secretKey;
      	}
      ```
      
-   - Cùng lúc đó Client sẽ gửi những thông tin sau lên server : **Username + password + Client key**  và được mã hóa bằng khóa public rsa của server 
-
-   - Server khi nhận được sẽ dùng khóa private rsa để giải mã và lấy thông tin đăng nhập so khớp mật khẩu như chế độ **Unsafe mode** và truy xuất database để lấy **secret key** + **client key**  và tạo ra AES key. Khóa này sẽ hoàn toàn dống với client.
-
    - Quá trình trao đổi tin nhắn sau này sẽ dùng khóa AES này
 
-3. Cài đặt và khởi chạy 
+3. **Cài đặt và khởi chạy** 
 
    - Yêu cầu máy tính :
 
